@@ -1,0 +1,55 @@
+<html>
+<head>
+	<title>Бочаров КНМО-101 HAMMING CODE</title>
+	<script>
+		function replaceAt(str, index, newElement){
+			return str.substring(0, index) + newElement + str.substring(index + 1);
+		}
+		function getRandomBit(min, max){
+			return Math.round(Math.random() * (max - min) + min);
+		}
+		function CodeMessage(){
+			let message = document.getElementById('inputMessage').value.split("");
+			let codedStr = '';
+			let firstBit, secondBit, thirdBit;
+			firstBit = (+message[0] + +message[1] + +message[2]) % 2;
+			secondBit = (+message[0] + +message[1] + +message[3]) % 2;
+			thirdBit = (+message[0] + +message[2] + +message[3]) % 2;
+			codedStr += message[0] + message[1] + message[2] + firstBit.toString() + message[3] + secondBit.toString() + thirdBit.toString();
+			console.log(codedStr);
+			document.getElementById('codedMessage').value = codedStr;
+			let brokenBit = getRandomBit(0, 6.4), brokenStr = '';
+			brokenStr = replaceAt(codedStr, brokenBit, (+codedStr[brokenBit] + 1) % 2);
+			console.log(brokenStr);
+			document.getElementById('brokenMessage').value = brokenStr;
+		}
+		function DecodeMessage(){
+			let codedStr = document.getElementById('brokenMessage').value;
+			let firstCircle = 0, secondCircle = 0, thirdCircle = 0;
+			firstCircle = (+codedStr[0] + +codedStr[1] + +codedStr[2] + +codedStr[3]) % 2;
+			secondCircle = (+codedStr[0] + +codedStr[1] + +codedStr[4] + +codedStr[5]) % 2;
+			thirdCircle = (+codedStr[0] + +codedStr[2] + +codedStr[4] + +codedStr[6]) % 2;
+			console.log(firstCircle, secondCircle, thirdCircle);
+			let decodedStr = '';
+			if (firstCircle + secondCircle + thirdCircle == 0) decodedStr = codedStr;
+			else{
+				let problemBit = 0;
+				problemBit = 7 - (firstCircle*4 + secondCircle*2 + thirdCircle);
+				decodedStr = replaceAt(codedStr, problemBit, (+codedStr[problemBit] + 1) % 2);
+			}
+			document.getElementById('decodedMessage').value = decodedStr;
+		}
+	</script>
+	
+</head>
+
+<body>
+	<h1>Бочаров КНМО-101</h1>
+	<p><input type = 'text' id = 'inputMessage' maxlength = '4' /> four bites </p>
+	<p><input type = 'button' value = 'To code' onClick ='CodeMessage()'/></p>
+	<p><input type = 'text' id = 'codedMessage' maxlength = '7' /> encoded message </p>
+	<p><input type = 'text' id = 'brokenMessage' maxlength = '7' /> broken message </p>
+	<p><input type = 'button' value = 'To decode' onClick = 'DecodeMessage()'/> </p>
+	<p><input type = 'text' id = 'decodedMessage' maxlength = '7' /> decoded message </p>
+</body>
+</html>
